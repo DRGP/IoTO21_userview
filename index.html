@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<style>
+    table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    td,
+    th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #dddddd;
+    }
+</style>
+
+<body>
+    <center>
+        <h1>Access attempts</h1>
+    </center>
+    <table id="attemptTable">
+        <tr>
+            <th>Username</th>
+            <th>Time</th>
+            <th>Was access granted?</th>
+        </tr>
+    </table>
+    <script>
+        let table = document.getElementById("attemptTable");
+
+        fetch('https://iotserver.us-south.cf.appdomain.cloud/attempts')
+            .then(response => response.json())
+            .then(data => attempts = data)
+            .then(() => attempts.forEach((item) => {
+                let tr = document.createElement("tr");
+                table.appendChild(tr);
+                
+                let usernameTd = document.createElement("td");
+                usernameTd.innerText = item.username;
+                tr.appendChild(usernameTd);
+                
+                let timeTd = document.createElement("td");
+                timeTd.innerText = item.time;
+                tr.appendChild(timeTd);
+
+                let accessTd = document.createElement("td");
+                if (item.is_access_granted) {
+                    accessTd.innerText = 'Yes';    
+                } else {
+                    accessTd.innerText = 'No';
+                }
+                tr.appendChild(accessTd);
+            }))
+            .then(() => console.log('Ok!'));
+    </script>
+</body>
+
+</html>
